@@ -8,19 +8,31 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
 public class SecondActivity extends Activity {
 
+    private Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        this.button = (Button) findViewById(R.id.buttonListenedFromSecondActivity);
+        this.button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                requestPermissions();
+            }
+        });
     }
 
 
-    public void requestPermissions(View view) {
+    public void requestPermissions() {
         logDebugActivity("Trying to acquire permissions from the user!");
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 0);
     }

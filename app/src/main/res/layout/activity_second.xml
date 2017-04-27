@@ -8,12 +8,16 @@
 
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
+        android:id="@+id/buttonListenedFromSecondActivity"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Request Permission"
-        android:onClick="requestPermissions"
-        />
+        android:layout_marginEnd="37dp"
+        android:layout_marginTop="2dp"
+        android:text="ButtonListened"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
 
 </android.support.constraint.ConstraintLayout>

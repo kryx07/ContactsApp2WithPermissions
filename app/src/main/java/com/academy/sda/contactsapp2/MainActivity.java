@@ -1,6 +1,7 @@
 package com.academy.sda.contactsapp2;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> adapter;
     private ListView list;
-    private Integer counter = 0;
+    private Button button;
+    private Activity thisActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,30 +35,37 @@ public class MainActivity extends AppCompatActivity {
         this.list.setAdapter(this.adapter);
 
         this.adapter.add("sth");
-    }
 
-    public void onButtonClick(View view) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            logDebugActivity("We need permissions to read contacts");
+        this.thisActivity=this;
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                logDebugActivity("Permission Rationale?");
+        this.button = (Button) findViewById(R.id.buttonListened);
+        this.button.setOnClickListener(new View.OnClickListener(){
 
-                startRequestScreen();
-            } else {
-                requestPermissions();
+
+            @Override
+            public void onClick(View v) {
+                if (checkPermissions(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    logDebugActivity("We need permissions to read contacts");
+
+                    if (checkIfRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
+                        logDebugActivity("Permission Rationale?");
+
+                        startRequestScreen();
+                    } else {
+                        requestPermissions();
+                    }
+
+
+                } else {
+                    logDebugActivity("We already have permission to READ_CONTACTS");
+
+                    readContacts();
+                }
+
             }
-
-
-        } else {
-            logDebugActivity("We already have permission to READ_CONTACTS");
-
-            readContacts();
-        }
-
-
+        });
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -109,8 +119,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void addNumber(Integer number) {
-        adapter.add(number.toString());
+    private int checkPermissions(String permissionType){
+        return ContextCompat.checkSelfPermission(thisActivity, permissionType);
+    }
+
+    private boolean checkIfRationaleNeeded(String permissionType){
+        return ActivityCompat.shouldShowRequestPermissionRationale(thisActivity, permissionType);
     }
 
     private void logDebugActivity(String str) {
